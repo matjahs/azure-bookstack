@@ -1,0 +1,31 @@
+version: '2'
+services:
+  mysql:
+    image: acrwikidev1.azurecr.io/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'bookstack'
+      MYSQL_DATABASE: 'bookstack'
+      MYSQL_USER: 'bookstack'
+      MYSQL_PASSWORD: 'bookstack'
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/mysql-data:/var/lib/mysql
+
+  bookstack:
+    image: acrwikidev1.azurecr.io/app
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: 'bookstack'
+      DB_USERNAME: 'bookstack'
+      DB_PASSWORD: 'bookstack'
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/uploads:/var/www/bookstack/public/uploads
+      - ${WEBAPP_STORAGE_HOME}/storage-uploads:/var/www/bookstack/public/storage
+    ports:
+      - "8088:80"
+
+volumes:
+  mysql-data:
+  uploads:
+  storage-uploads:
